@@ -1,0 +1,60 @@
+---
+- name: Untar the source package
+  unarchive:
+    src: "{{ wsgi_src_pkg_path }}"
+    dest: "{{ wsgi_download_dir }}"
+    creates: "{{ wsgi_src_dir_path }}/configure"
+    copy: no
+
+
+- name: Run configure
+  shell: "./configure --with-python={{ python_install_dir }}/bin/{{ python_exec }}"
+  args:
+    chdir: "{{ wsgi_src_dir_path }}"
+    creates: "{{ wsgi_src_dir_path }}/Makefile"
+
+
+- name: Run make
+  command: make
+  args:
+    chdir: "{{ wsgi_src_dir_path }}"
+    creates: "{{ wsgi_src_dir_path }}/src/server/.libs/mod_wsgi.so"
+
+
+- name: Install WSGI
+  command: make install
+  args:
+    chdir: "{{ wsgi_src_dir_path }}"
+    creates: "{{ apache_libexecdir }}/mod_wsgi.so"
+  become: true
+  notify: restart apache
+  when: not wsgi_force_install
+
+
+- name: Install WSGI | Force install
+  command: make install
+  args:
+    chdir: "{{ wsgi_src_dir_path }}"
+  become: true
+  notify: restart apache
+  when: wsgi_force_install
+
+
+- name: Clean up the source files
+  command: rm -r "{{ item }}"
+  with_items:
+    - "{{ wsgi_src_pkg_path }}"
+    - "{{ wsgi_src_dir_path }}"
+  when: wsgi_cleanup_downloads|bool
+
+
+# - name: Disable Python Apache module if present
+  # apache2_module: name=python state=absent
+  # become: true
+
+
+# - name: Enable WSGI Apache module
+  # apache2_module: name=wsgi state=present
+  # become: true
+  # notify: restart apache
+

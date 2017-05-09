@@ -1,0 +1,29 @@
+---
+## Installation options
+
+# The wsgi version to install
+wsgi_version: 4.4.21
+
+
+# The python version to link to. Caution! The python should be installed in advance
+python_version: 3.5.3
+
+# Location of the installed python files
+python_install_dir: /usr/local
+
+
+# Directory where to download wsgi
+wsgi_download_dir: /tmp
+
+wsgi_download_url: "https://github.com/GrahamDumpleton/mod_wsgi/archive/{{ wsgi_version }}.tar.gz"
+wsgi_src_pkg_path: "{{ wsgi_download_dir }}/mod_wsgi-{{ wsgi_version }}.tar.gz" 
+wsgi_src_dir_path: "{{ wsgi_download_dir }}/mod_wsgi-{{ wsgi_version }}"
+
+# whether or not to delete the downloaded source code. By setting it
+# to false and using a custom var for `wsgi_download_dir` a kind of
+# local caching can be achieved.
+wsgi_cleanup_downloads: yes
+
+# If true, the mod_wsgi source for the version will be downloaded and
+# installed again even if it's found on the system.
+wsgi_force_install: no

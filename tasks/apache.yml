@@ -1,0 +1,30 @@
+---
+# ---------------------------------------------
+# Figure out what version of Apache is installed.
+# ---------------------------------------------
+- name: Get installed version of Apache.
+  shell: "{{ apache_daemon_path }}{{ apache_daemon }} -v"
+  changed_when: false
+  check_mode: no
+  register: _apache_version
+
+- name: Create apache_version variable.
+  set_fact:
+    apache_version: "{{ _apache_version.stdout.split()[2].split('/')[1] }}"
+ 
+- name: Download mod_wsgi source code
+  get_url:
+    url: "{{ wsgi_download_url }}"
+    dest: "{{ wsgi_src_pkg_path }}"
+
+- name: Get Apache modules directory
+  shell: "apxs -q LIBEXECDIR"
+  changed_when: false
+  check_mode: no
+  register: _apache_libexecdir
+
+- name: Create apache_libexecdir variable.
+  set_fact:
+    apache_libexecdir: "{{ _apache_libexecdir.stdout }}"
+
+
