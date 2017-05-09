@@ -3,7 +3,7 @@
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml" 
 
-- include: apache.yml
+- include: dependencies-apache.yml
 
 - name: Check if mod_wsgi is installed
   stat:
@@ -11,7 +11,7 @@
   register: wsgi_exists
   changed_when: False
 
-- include: python.yml
+- include: dependencies-python.yml
   when: wsgi_force_install|bool or wsgi_exists.stat.exists == False
 
 - include: dependencies.yml

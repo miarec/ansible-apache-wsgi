@@ -1,4 +1,9 @@
 ---
+- name: Download mod_wsgi source code
+  get_url:
+    url: "{{ wsgi_download_url }}"
+    dest: "{{ wsgi_src_pkg_path }}"
+
 - name: Untar the source package
   unarchive:
     src: "{{ wsgi_src_pkg_path }}"

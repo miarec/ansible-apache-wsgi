@@ -12,11 +12,6 @@
   set_fact:
     apache_version: "{{ _apache_version.stdout.split()[2].split('/')[1] }}"
  
-- name: Download mod_wsgi source code
-  get_url:
-    url: "{{ wsgi_download_url }}"
-    dest: "{{ wsgi_src_pkg_path }}"
-
 - name: Get Apache modules directory
   shell: "apxs -q LIBEXECDIR"
   changed_when: false
