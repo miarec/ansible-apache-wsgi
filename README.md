@@ -1,15 +1,15 @@
-# ansible-python
+# ansible-apache-wsgi
 
-Ansible role for installing a particular version of Python from source.
+Ansible role to install mode_wsgi apache module from source code
 
 
 Role Variables
 --------------
 
 - `wsgi_version`: The version of mod_wsgi module to install
-- `wsgi_force_install`: Install again even if the mod_wsgi is already installed as an apache module
 - `python_version`: The version of python to compile the mod_wsgi with
 - `python_install_dir`: The location of python installed files (default is /usr/local)
+- `wsgi_force_install`: Install again even if the mod_wsgi is already installed as an apache module
 
 See `defaults/main.yml` for more variables
 
