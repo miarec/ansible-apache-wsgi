@@ -3,7 +3,9 @@
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_os_family }}.yml" 
 
+- include: dependencies.yml
 - include: dependencies-apache.yml
+- include: dependencies-python.yml
 
 - name: Check if mod_wsgi is installed
   stat:
@@ -11,12 +13,23 @@
   register: wsgi_exists
   changed_when: False
 
-- include: dependencies-python.yml
-  when: wsgi_force_install|bool or wsgi_exists.stat.exists == False
-
-- include: dependencies.yml
-  when: wsgi_force_install|bool or wsgi_exists.stat.exists == False
-
 - include: install.yml
   when: wsgi_force_install|bool or wsgi_exists.stat.exists == False
+
+
+- name: Install wsgi.load
+  copy:
+    content: "LoadModule wsgi_module {{ apache_libexecdir }}/mod_wsgi.so"
+    dest: "{{ apache_conf_path }}/mods-available/wsgi.load"
+  notify: restart apache
+  when: ansible_os_family == "Debian"
+
+- name: Enable wsgi module
+  apache2_module:
+    state: present
+    name: wsgi
+  notify: restart apache
+  when: ansible_os_family == "Debian"
+
+
 

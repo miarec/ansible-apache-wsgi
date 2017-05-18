@@ -1,17 +1,13 @@
 ---
 # ---------------------------------------------
-# Verify python installation
+# Verify python installation on this server
+# Input variables:
+#   - python_version
+#   - python_install_dir
 # ---------------------------------------------
 - set_fact:
-    # Translate full python_version (3.4.5) to the MAJOR.MINOR value, like "3.4"
-    python_version_base: "{{ python_version|regex_replace('(\\d+\\.\\d+)\\..*$', '\\1') }}"
-  when: ansible_version.major >= 2
-
-- set_fact:
-    # Translate full python_version (3.4.5) to the MAJOR.MINOR value, like "3.4"
-    # Prior to ansible 2.0, you needed to escape backreferences (e.g. \\1) with 4 backslashes (\\\\)
-    python_version_base: "{{ python_version|regex_replace('(\\d+\\.\\d+)\\..*$', '\\\\1') }}"
-  when: ansible_version.major < 2
+    ## Translate full python_version (3.4.5) to the MAJOR.MINOR value, like "3.4"
+    python_version_base: "{{ '.'.join(python_version.split('.')[:2]) }}"
 
 - set_fact:
     python_exec: "python{{ python_version_base }}"
@@ -19,4 +15,3 @@
 - name: check if python version {{ python_version }} installed
   command: "which {{ python_install_dir }}/bin/{{ python_exec }}"
   changed_when: False
-

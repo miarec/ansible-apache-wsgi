@@ -15,6 +15,7 @@
     - make
     - openssl
     - libssl-dev
+    - apache2-dev
   when: ansible_os_family == "Debian"
 
 - name: install dependencies | RedHat
